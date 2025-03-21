@@ -1,7 +1,7 @@
 import streamlit as st
 import pickle
 import pandas as pd
-
+import sklearn
 # Load the trained model
 try:
     with open("pipe.pkl", "rb") as pickle_in:
