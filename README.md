@@ -12,3 +12,8 @@ Pandas, NumPy
 Scikit-learn
 Matplotlib, Seaborn,
 Streamlit
+
+
+# run command
+1. open in base
+2. streamlit run stapp.py
