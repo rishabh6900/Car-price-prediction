@@ -2,9 +2,27 @@ import streamlit as st
 import pickle
 import pandas as pd
 
+
+
+import os
+
+# Get current directory
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Load model
+model_path = os.path.join(BASE_DIR, "pipe.pkl")
+image_path = os.path.join(BASE_DIR, "carimage.jpg")
+
+
+
+
+
+
+
 # Load the trained model
 try:
-    with open("pipe.pkl", "rb") as pickle_in:
+    with open(model_path, "rb") as pickle_in:
+
         pipe = pickle.load(pickle_in)
 except Exception as e:
     st.error(f"Error loading the model: {e}")
@@ -118,7 +136,7 @@ if st.button("Predict Price 💰"):
     except Exception as e:
         st.error(f"Error in prediction: {e}")
 
-st.sidebar.image("carimage.jpg")
+st.sidebar.image(image_path)
 st.sidebar.title(" Welcome Car Price Prediction App")
 st.sidebar.text("*Here is Max year 2019 and Min years 1995")
 st.sidebar.text("*Here is Max Km 50000 and Min Km 0")
