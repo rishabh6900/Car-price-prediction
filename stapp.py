@@ -2,8 +2,6 @@ import streamlit as st
 import pickle
 import pandas as pd
 
-
-
 import os
 
 # Get current directory
@@ -12,12 +10,6 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # Load model
 model_path = os.path.join(BASE_DIR, "pipe.pkl")
 image_path = os.path.join(BASE_DIR, "carimage.jpg")
-
-
-
-
-
-
 
 # Load the trained model
 try:
