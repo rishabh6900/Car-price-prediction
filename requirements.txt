@@ -1,19 +1,9 @@
-pandas
-numpy
-matplotlib
-seaborn
+pandas==2.2.2
+numpy==1.26.4
+matplotlib==3.8.3
+seaborn==0.13.2
 scikit-learn==1.4.2
-requests
-streamlit
-joblib
+requests==2.31.0
+streamlit==1.43.1
+joblib==1.4.2
 Pillow
-
-# pandas==2.2.2
-# numpy==1.26.4
-# matplotlib==3.8.3
-# seaborn==0.13.2
-# scikit-learn==1.4.2
-# requests==2.31.0
-# streamlit==1.43.1
-# joblib==1.4.2
-# Pillow
