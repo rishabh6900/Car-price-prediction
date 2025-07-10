@@ -17,7 +17,7 @@ model = load_model()
 @app.route('/')
 def home():
     # Serve index.html directly from root directory
-    return send_from_directory(os.path.dirname(__file__), 'index.html')
+    return send_from_directory(os.path.dirname(__file__), 'templates/index.html')
 
 @app.route('/predict', methods=['POST'])
 def predict():
