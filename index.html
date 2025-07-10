@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Price Predictor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --dark-color: #1a1a2e;
+            --light-color: #f8f9fa;
+            --success-color: #4cc9f0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: var(--dark-color);
+        }
+
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1.5rem;
+            border-bottom: none;
+        }
+
+        .card-header h1 {
+            font-weight: 600;
+            margin: 0;
+            font-size: 2.2rem;
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        .form-control {
+            border-radius: 8px;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.25);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        /* Results Card Styling */
+        .result-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border-left: 5px solid var(--primary-color);
+            display: none;
+        }
+
+        .price-display {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .detail-item {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .detail-value {
+            color: #555;
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade {
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .card-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .card-body {
+                padding: 1.5rem;
+            }
+            
+            .price-display {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card mt-5 animate-fade">
+                <div class="card-header text-center">
+                    <h1><i class="fas fa-car me-2"></i>Car Price Predictor</h1>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <p class="lead">Get an accurate estimate for your car's value in seconds</p>
+                    </div>
+                    <form method="post" accept-charset="utf-8" name="Modelform" id="predictionForm">
+                        <div class="form-group">
+                            <label for="company"><i class="fas fa-building me-2"></i>Select the company:</label>
+                            <select class="form-select form-control" id="company" name="company" required="1"
+                                    onchange="load_car_models(this.id,'car_models')">
+                                <option value="">Select Company</option>
+                                <option value="Hyundai">Hyundai</option>
+                                <option value="Mahindra">Mahindra</option>
+                                <option value="Ford">Ford</option>
+                                <option value="Maruti">Maruti</option>
+                                <option value="Skoda">Skoda</option>
+                                <option value="Audi">Audi</option>
+                                <option value="Toyota">Toyota</option>
+                                <option value="Renault">Renault</option>
+                                <option value="Honda">Honda</option>
+                                <option value="Datsun">Datsun</option>
+                                <option value="Mitsubishi">Mitsubishi</option>
+                                <option value="Tata">Tata</option>
+                                <option value="Volkswagen">Volkswagen</option>
+                                <option value="Chevrolet">Chevrolet</option>
+                                <option value="Mini">Mini</option>
+                                <option value="BMW">BMW</option>
+                                <option value="Nissan">Nissan</option>
+                                <option value="Hindustan">Hindustan</option>
+                                <option value="Fiat">Fiat</option>
+                                <option value="Force">Force</option>
+                                <option value="Mercedes">Mercedes</option>
+                                <option value="Land">Land Rover</option>
+                                <option value="Jaguar">Jaguar</option>
+                                <option value="Jeep">Jeep</option>
+                                <option value="Volvo">Volvo</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="car_models"><i class="fas fa-car-side me-2"></i>Select the model:</label>
+                            <select class="form-select form-control" id="car_models" name="car_models" required="1">
+                                <option value="">Select Model</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="year"><i class="fas fa-calendar-alt me-2"></i>Select Year of Purchase:</label>
+                            <select class="form-select form-control" id="year" name="year" required="1">
+                                <option value="">Select Year</option>
+                                <!-- Generate years from 1995 to 2019 -->
+                                <script>
+                                    for (let year = 2019; year >= 1995; year--) {
+                                        document.write(`<option value="${year}">${year}</option>`);
+                                    }
+                                </script>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="fuel_type"><i class="fas fa-gas-pump me-2"></i>Select the Fuel Type:</label>
+                            <select class="form-select form-control" id="fuel_type" name="fuel_type" required="1">
+                                <option value="">Select Fuel Type</option>
+                                <option value="Petrol">Petrol</option>
+                                <option value="Diesel">Diesel</option>
+                                <option value="LPG">LPG</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="kilo_driven"><i class="fas fa-tachometer-alt me-2"></i>Enter the Number of Kilometers:</label>
+                            <input type="number" class="form-control" id="kilo_driven" name="kilo_driven"
+                                   placeholder="Enter kilometers driven" required min="0" value="50000" step="1000">
+                        </div>
+                        <div class="form-group text-center mt-4">
+                            <button type="button" class="btn btn-primary btn-lg" onclick="send_data()">
+                                <i class="fas fa-rocket me-2"></i>Predict Price
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <!-- Results Card -->
+                    <div class="card result-card mt-4 animate-fade" id="resultCard">
+                        <div class="card-body">
+                            <div class="text-center mb-4">
+                                <h3><i class="fas fa-chart-line me-2"></i>Prediction Results</h3>
+                            </div>
+                            <div class="text-center price-display mb-4" id="predictedPrice">
+                                ₹0.00
+                            </div>
+                            <div class="details-container" id="carDetails">
+                                <!-- Details will be inserted here by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Car data
+    const carData = {
+        "Hyundai": ['Hyundai Santro Xing', 'Hyundai Grand i10', 'Hyundai Eon', 'Hyundai Elite i20', 'Hyundai i20 Sportz', 'Hyundai i20 Magna', 'Hyundai Verna Transform', 'Hyundai i10 Magna', 'Hyundai Verna Fluidic', 'Hyundai i20 Asta', 'Hyundai Eon Era', 'Hyundai Creta 1.6', 'Hyundai i20 Active', 'Hyundai i10 Sportz', 'Hyundai i10', 'Hyundai Accent GLX', 'Hyundai Elantra SX', 'Hyundai Accent', 'Hyundai Verna', 'Hyundai Xcent Base', 'Hyundai Accent Executive', 'Hyundai Verna 1.4', 'Hyundai Verna 1.6', 'Hyundai Sonata Transform', 'Hyundai Xcent SX', 'Hyundai Santro', 'Hyundai Getz Prime', 'Hyundai Santro AE', 'Hyundai Verna VGT', 'Hyundai i10 Era', 'Hyundai Elantra 1.8', 'Hyundai i20 Select', 'Hyundai Getz GLE', 'Hyundai Creta', 'Hyundai Getz', 'Hyundai Santro Xing'],
+        "Mahindra": ['Mahindra Jeep CL550', 'Mahindra Scorpio SLE', 'Mahindra Scorpio S10', 'Mahindra Bolero DI', 'Mahindra Scorpio S4', 'Mahindra Scorpio VLX', 'Mahindra Quanto C8', 'Mahindra XUV500 W8', 'Mahindra Bolero SLE', 'Mahindra Thar CRDe', 'Mahindra TUV300 T4', 'Mahindra KUV100 K8', 'Mahindra Scorpio 2.6', 'Mahindra Scorpio W', 'Mahindra Scorpio SLX', 'Mahindra XUV500', 'Mahindra Jeep MM', 'Mahindra Xylo E4', 'Mahindra Bolero Power', 'Mahindra Scorpio Vlx', 'Mahindra Logan Diesel', 'Mahindra XUV500 W10', 'Mahindra TUV300 T8', 'Mahindra XUV500 W6', 'Mahindra Scorpio LX', 'Mahindra KUV100', 'Mahindra Xylo D2', 'Mahindra Xylo E8', 'Mahindra Logan', 'Mahindra Quanto C4'],
+        "Ford": ['Ford EcoSport Titanium', 'Ford Figo', 'Ford EcoSport Ambiente', 'Ford EcoSport', 'Ford Figo Diesel', 'Ford Figo Duratorq', 'Ford EcoSport Trend', 'Ford Fiesta', 'Ford Fiesta SXi', 'Ford Ikon 1.3', 'Ford Ikon 1.6', 'Ford Figo Petrol', 'Ford Endeavor 4x4', 'Ford Fusion 1.4'],
+        "Maruti": ['Maruti Suzuki Alto', 'Maruti Suzuki Stingray', 'Maruti Suzuki Vitara', 'Maruti Suzuki Swift', 'Maruti Suzuki Wagon', 'Maruti Suzuki Baleno', 'Maruti Suzuki Dzire', 'Maruti Suzuki SX4', 'Maruti Suzuki Ertiga', 'Maruti Suzuki Ritz', 'Maruti Suzuki Esteem', 'Maruti Suzuki Ciaz', 'Maruti Suzuki Zen', 'Maruti Suzuki Versa', 'Maruti Suzuki Omni', 'Maruti Suzuki 800', 'Maruti Suzuki Estilo', 'Maruti Suzuki Maruti', 'Maruti Suzuki Celerio', 'Maruti Suzuki S'],
+        "Skoda": ['Skoda Fabia Classic', 'Skoda Yeti Ambition', 'Skoda Fabia 1.2L', 'Skoda Rapid Elegance', 'Skoda Superb 1.8', 'Skoda Laura', 'Skoda Octavia Classic', 'Skoda Fabia'],
+        "Audi": ['Audi A8', 'Audi Q7', 'Audi A4 1.8', 'Audi A4 2.0', 'Audi Q3 2.0', 'Audi A6 2.0', 'Audi Q5 2.0', 'Audi A3 Cabriolet'],
+        "Toyota": ['Toyota Innova 2.0', 'Toyota Corolla Altis', 'Toyota Etios GD', 'Toyota Etios Liva', 'Toyota Innova 2.5', 'Toyota Corolla H2', 'Toyota Fortuner', 'Toyota Etios', 'Toyota Fortuner 3.0', 'Toyota Qualis', 'Toyota Etios G'],
+        "Renault": ['Renault Lodgy 85', 'Renault Duster 110', 'Renault Duster 85', 'Renault Kwid', 'Renault Scala RxL', 'Renault Kwid RXT', 'Renault Kwid 1.0', 'Renault Duster 85PS', 'Renault Duster RxL'],
+        "Honda": ['Honda City 1.5', 'Honda Amaze', 'Honda Amaze 1.5', 'Honda City', 'Honda City ZX', 'Honda City VX', 'Honda City SV', 'Honda Brio', 'Honda Brio V', 'Honda Accord', 'Honda Mobilio', 'Honda Mobilio S', 'Honda Jazz VX', 'Honda Jazz S', 'Honda WR V'],
+        "Datsun": ['Datsun Redi GO', 'Datsun GO T', 'Datsun Go Plus'],
+        "Mitsubishi": ['Mitsubishi Pajero Sport', 'Mitsubishi Lancer 1.8'],
+        "Tata": ['Tata Indigo eCS', 'Tata Indica V2', 'Tata Nano Cx', 'Tata Sumo Victa', 'Tata Indigo CS', 'Tata Zest XE', 'Tata Zest Quadrajet', 'Tata Sumo Gold', 'Tata Manza Aura', 'Tata Manza Aqua', 'Tata Vista Quadrajet', 'Tata Indica eV2', 'Tata Indigo LX', 'Tata Indigo LS', 'Tata Nano GenX', 'Tata Venture EX', 'Tata Bolt XM', 'Tata Sumo Grande', 'Tata Tiago Revotron', 'Tata Tiago Revotorq', 'Tata Indigo Marina', 'Tata Nano LX', 'Tata Manza ELAN'],
+        "Volkswagen": ['Volkswagen Polo Highline', 'Volkswagen Vento Highline', 'Volkswagen Polo Comfortline', 'Volkswagen Polo', 'Volkswagen Jetta Highline', 'Volkswagen Polo Trendline', 'Volkswagen Polo Highline1.2L', 'Volkswagen Vento Konekt', 'Volkswagen Vento Comfortline', 'Volkswagen Jetta Comfortline', 'Volkswagen Passat Diesel'],
+        "Chevrolet": ['Chevrolet Spark LS', 'Chevrolet Beat LT', 'Chevrolet Spark', 'Chevrolet Beat', 'Chevrolet Beat LS', 'Chevrolet Sail UVA', 'Chevrolet Beat Diesel', 'Chevrolet Tavera Neo', 'Chevrolet Tavera LS', 'Chevrolet Enjoy 1.4', 'Chevrolet Cruze LTZ', 'Chevrolet Sail 1.2', 'Chevrolet Enjoy'],
+        "Mini": ['Mini Cooper S'],
+        "BMW": ['BMW 3 Series', 'BMW 7 Series', 'BMW 5 Series', 'BMW X1 xDrive20d', 'BMW X1 sDrive20d', 'BMW X1'],
+        "Nissan": ['Nissan Micra XV', 'Nissan Sunny', 'Nissan Terrano XL', 'Nissan X Trail', 'Nissan Micra XL'],
+        "Hindustan": ['Hindustan Motors Ambassador'],
+        "Fiat": ['Fiat Punto Emotion', 'Fiat Petra ELX', 'Fiat Linea Emotion'],
+        "Force": ['Force Motors Force', 'Force Motors One'],
+        "Mercedes": ['Mercedes Benz GLA', 'Mercedes Benz B', 'Mercedes Benz C', 'Mercedes Benz A'],
+        "Land": ['Land Rover Freelander'],
+        "Jaguar": ['Jaguar XE XE', 'Jaguar XF 2.2'],
+        "Jeep": ['Jeep Wrangler Unlimited'],
+        "Volvo": ['Volvo S80 Summum']
+    };
+
+    // Initialize car models when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        load_car_models('company', 'car_models');
+    });
+
+    function load_car_models(company_id, car_model_id) {
+        var company = document.getElementById(company_id);
+        var car_model = document.getElementById(car_model_id);
+        car_model.innerHTML = '<option value="">Select Model</option>';
+        
+        if (company.value && carData[company.value]) {
+            carData[company.value].forEach(model => {
+                var newOption = document.createElement("option");
+                newOption.value = model;
+                newOption.innerHTML = model;
+                car_model.appendChild(newOption);
+            });
+        }
+    }
+
+    function form_handler(event) {
+        event.preventDefault();
+    }
+
+    function send_data() {
+        // Validate form
+        const form = document.querySelector('form');
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
+
+        document.querySelector('form').addEventListener("submit", form_handler);
+
+        var fd = new FormData(document.querySelector('form'));
+        var resultCard = document.getElementById('resultCard');
+        var predictedPrice = document.getElementById('predictedPrice');
+        var carDetails = document.getElementById('carDetails');
+        
+        // Show loading state
+        resultCard.style.display = "block";
+        carDetails.innerHTML = '<div class="text-center"><i class="fas fa-spinner fa-spin fa-2x"></i><p>Analyzing details...</p></div>';
+        
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/predict', true);
+        
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == XMLHttpRequest.DONE) {
+                if (xhr.status == 200) {
+                    // Get form values
+                    const formData = {
+                        company: document.getElementById('company').value,
+                        model: document.getElementById('car_models').value,
+                        year: document.getElementById('year').value,
+                        kilometers: document.getElementById('kilo_driven').value,
+                        fuel: document.getElementById('fuel_type').value
+                    };
+                    
+                    // Format the price with commas
+                    const price = parseFloat(xhr.responseText).toLocaleString('en-IN');
+                    predictedPrice.innerHTML = `₹${price}`;
+                    
+                    // Create details HTML
+                    carDetails.innerHTML = `
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="fas fa-building me-2"></i>Company:</span>
+                            <span class="detail-value">${formData.company}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="fas fa-car-side me-2"></i>Model:</span>
+                            <span class="detail-value">${formData.model}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="fas fa-calendar-alt me-2"></i>Year:</span>
+                            <span class="detail-value">${formData.year}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="fas fa-tachometer-alt me-2"></i>Kilometers:</span>
+                            <span class="detail-value">${parseInt(formData.kilometers).toLocaleString()} km</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="fas fa-gas-pump me-2"></i>Fuel Type:</span>
+                            <span class="detail-value">${formData.fuel}</span>
+                        </div>
+                    `;
+                    
+                    // Add celebration effect
+                    resultCard.style.animation = "none";
+                    void resultCard.offsetWidth; // Trigger reflow
+                    resultCard.style.animation = "fadeIn 0.6s ease forwards";
+                    
+                    // Scroll to results
+                    resultCard.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    carDetails.innerHTML = '<div class="alert alert-danger">Error predicting price. Please try again.</div>';
+                }
+            }
+        };
+
+        xhr.onerror = function() {
+            carDetails.innerHTML = '<div class="alert alert-danger">Network error. Please check your connection.</div>';
+        };
+
+        xhr.send(fd);
+    }
+</script>
+</body>
+</html>
